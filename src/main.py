@@ -15,18 +15,28 @@ def main():
 
     dummy = TextNode("dummy text", "italic", "https://url.org")
 
-    print(dummy)
-
-    print()
 
     dummyHTML = HTMLNode("tag name 1", 
                          "html tag value",
                          lc1,
                          d1)
 
-    print(dummyHTML.to_html())
+    dummyLeafNode1 = LeafNode("p", "This is a paragraph of text.")
+    dummyLeafNode2 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+    dummyLeafNode3 = LeafNode("a", "Click me!", d1)
+    
+    print(dummyLeafNode1)
+    print(dummyLeafNode2)
+    print("-----")
+    print(dummyLeafNode1.to_html())
     print()
-    print(dummyHTML.props_to_html())
+    print(dummyLeafNode2.to_html())
+    print()
+    print(dummyLeafNode3.to_html())
+    print()
+    print(dummyLeafNode3)
+
+
 
 if __name__ == "__main__":
     main()
