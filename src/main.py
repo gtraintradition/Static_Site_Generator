@@ -1,4 +1,14 @@
 from textnode import *
+from htmlnode import *
+
+
+
+d1 = {
+    "href": "https://www.google.com", 
+    "target": "_blank",
+}
+lc1 = ["children1", "children2", "children3"]
+
 
 
 def main():
@@ -7,5 +17,16 @@ def main():
 
     print(dummy)
 
+    print()
 
-main()
+    dummyHTML = HTMLNode("tag name 1", 
+                         "html tag value",
+                         lc1,
+                         d1)
+
+    print(dummyHTML.to_html())
+    print()
+    print(dummyHTML.props_to_html())
+
+if __name__ == "__main__":
+    main()
