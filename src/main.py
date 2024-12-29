@@ -55,7 +55,11 @@ def main():
     parent_node3 = ParentNode("nc",[],)
 
 
-
+    print(dummyHTML)
+    print("-----")
+    print(parent_node2)
+    print("-----")
+    
     print(parent_node3.to_html())
     print("-----")
     print(parent_node2.to_html())

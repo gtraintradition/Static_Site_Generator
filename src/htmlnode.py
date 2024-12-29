@@ -10,9 +10,11 @@ class HTMLNode():
 
 
     def __repr__(self):
-        # returns a string representation of the object
-        return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
+        # returns a string with class name and variables
+        final = list(map(str, vars(self).values()))
+        return f"{self.__class__.__name__}({", ".join(final)})"
 
+        
 
     def to_html(self):
         # overridden by class children
@@ -33,11 +35,6 @@ class LeafNode(HTMLNode):
         self.tag = tag
         self.value = value
         self.props = props
-
-
-    def __repr__(self):
-        # returns a string representation of the object
-        return f"HTMLNode({self.tag}, {self.value}, {self.props})"
 
 
     def to_html(self):
@@ -62,11 +59,6 @@ class ParentNode(HTMLNode):
         self.tag = tag
         self.children = children
         self.props = props
-
-
-    def __repr__(self):
-        # returns a string representation of the object
-        return f"HTMLNode({self.tag}, {self.children}, {self.props})"
 
 
     def to_html(self):

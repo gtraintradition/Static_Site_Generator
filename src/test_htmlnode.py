@@ -41,11 +41,11 @@ class TestLeafNode(unittest.TestCase):
             leaf_node1 = LeafNode("tag name 2", "second  value", lc1, d1)
 
     def test_no_children2(self):
-        with self.assertRaises(AttributeError, msg="Expected AttributeErrore"):
+        with self.assertRaises(AttributeError, msg="Expected AttributeError"):
             leaf_node1.children
 
     def test__repr__(self):
-        self.assertEqual(leaf_node1.__repr__(), "HTMLNode(a, Click me!, {'href': 'https://www.google.com', 'target': '_blank'})")
+        self.assertEqual(leaf_node1.__repr__(), "LeafNode(a, Click me!, {'href': 'https://www.google.com', 'target': '_blank'})")
 
 
     def test_to_html(self):
@@ -78,7 +78,7 @@ class TestParentNode(unittest.TestCase):
         d2,
         )
 
-        self.assertEqual(parent_node2.__repr__(), "HTMLNode(io, [HTMLNode(p, This is a paragraph of text., None), HTMLNode(p, [HTMLNode(b, Bold text, None), HTMLNode(None, Normal text, None), HTMLNode(i, italic text, None), HTMLNode(None, Normal text, None)], None), HTMLNode(a, Click me!, {'href': 'https://www.google.com', 'target': '_blank'}), HTMLNode(gg, non text, None)], {'href': 'https://www.duckduckgo.com', 'target': '_green_____'})")
+        self.assertEqual(parent_node2.__repr__(), "ParentNode(io, [LeafNode(p, This is a paragraph of text., None), ParentNode(p, [LeafNode(b, Bold text, None), LeafNode(None, Normal text, None), LeafNode(i, italic text, None), LeafNode(None, Normal text, None)], None), LeafNode(a, Click me!, {'href': 'https://www.google.com', 'target': '_blank'}), LeafNode(gg, non text, None)], {'href': 'https://www.duckduckgo.com', 'target': '_green_____'})")
 
 
     def test_no_value(self):
