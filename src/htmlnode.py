@@ -23,6 +23,8 @@ class HTMLNode():
 
     def props_to_html(self):
         # returns a string that represents the HTML attributes of the node
+        if self.props == None:
+            return ""
         to_join = map(lambda k: f" {k}=\"{self.props[k]}\"", self.props)
         return "".join(to_join)
     
@@ -31,7 +33,7 @@ class HTMLNode():
 class LeafNode(HTMLNode):
 
     def __init__(self, tag, value, props=None):
-        HTMLNode().__init__()
+        HTMLNode().__init__(tag, value, None, props)
         self.tag = tag
         self.value = value
         self.props = props
@@ -40,22 +42,20 @@ class LeafNode(HTMLNode):
     def to_html(self):
         # renders a leaf node as an HTML string
         if self.value == None:
-            raise Exception("All leaf nodes must have a value.")
+            raise Exception("LeafNode value can't be \"None\".")
         if self.tag == None:
             return self.value
-        if self.props == None:
-            rendered = f"<{self.tag}>{self.value}</{self.tag}>"
-        else:
-            rendered = f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
 
-        return rendered
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+
+
     
 
 
 class ParentNode(HTMLNode):
 
     def __init__(self, tag, children, props=None):
-        HTMLNode().__init__()
+        HTMLNode().__init__(tag, None, children, props)
         self.tag = tag
         self.children = children
         self.props = props
@@ -63,9 +63,9 @@ class ParentNode(HTMLNode):
 
     def to_html(self):
         if self.tag == None:
-            raise ValueError("\"tag value\" can't be \"None\"")
+            raise ValueError("\"tag\" value can't be \"None\"")
         if self.children == None:
-            raise ValueError("\"children value\" can't be \"None\"")    
+            raise ValueError("\"children\" value can't be \"None\"")    
 
         if len(self.children) > 0:
             processed_lines = map(lambda child: child.to_html(), self.children)
@@ -73,15 +73,11 @@ class ParentNode(HTMLNode):
         if self.children == []:
             processed_lines = [""]
 
-
         joined_lines = "".join(processed_lines)
 
-        if self.props == None:
-            rendered = f"<{self.tag}>{joined_lines}</{self.tag}>"
-        else:
-            rendered = f"<{self.tag}{self.props_to_html()}>{joined_lines}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{joined_lines}</{self.tag}>"
         
-        return rendered
+
         
 
  

@@ -33,5 +33,5 @@ class TextNode():
     def __repr__(self):
         # returns a string with class name and variables
         final = list(map(str, vars(self).values()))
-        final[1] = str(self.text_type.value)
+        final[1] = str(self.text_type.value)        # might need adjustment if children classes are created
         return f"{self.__class__.__name__}({", ".join(final)})"

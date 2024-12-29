@@ -32,10 +32,15 @@ def main():
     dummy = TextNode("dummy text", "italic", "https://url.org")
 
 
-    dummyHTML = HTMLNode("tag name 1", 
+    dummyHTML1 = HTMLNode("tag name 1", 
                          "html tag value",
                          lc1,
                          d1)
+    
+    dummyHTML2 = HTMLNode("tag name 1", 
+                         "html tag value",
+                         lc1,
+                         )
 
     dummyLeafNode1 = LeafNode("p", "This is a paragraph of text.")
     dummyLeafNode2 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
@@ -55,7 +60,7 @@ def main():
     parent_node3 = ParentNode("nc",[],)
 
 
-    print(dummyHTML)
+    print(dummyHTML2.props_to_html())
     print("-----")
     print(parent_node2)
     print("-----")
