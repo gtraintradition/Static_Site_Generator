@@ -1,11 +1,11 @@
-from unittest import *
+import unittest
 
 from textnode import *
 from htmlnode import LeafNode
 from textnode_to_htmlnode import text_node_to_html_node
 
 
-class Test_text_node_to_html_node(TestCase):
+class Test_text_node_to_html_node(unittest.TestCase):
 
     def test_convert_image_node(self):
         dummy = TextNode("alt text", "image", "https://url.org")
@@ -52,3 +52,6 @@ class Test_text_node_to_html_node(TestCase):
         with self.assertRaises(ValueError, msg="Expected ValueError"):
             text_node_to_html_node(dummyLeafNode1)
         
+
+if __name__ == "__main__":
+    unittest.main()

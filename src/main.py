@@ -2,7 +2,7 @@ from textnode import *
 from htmlnode import *
 
 from textnode_to_htmlnode import *
-from split_nodes_delimiter import *
+from inline_markdown import *
 
 
 

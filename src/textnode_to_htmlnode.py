@@ -1,6 +1,8 @@
 from htmlnode import LeafNode
 from textnode import TextType, TagType, TextNode
 
+from text_enums import *
+
 
 def text_node_to_html_node(text_node):
     if not isinstance(text_node, TextNode):
