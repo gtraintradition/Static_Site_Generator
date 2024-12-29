@@ -48,14 +48,14 @@ def process_node(node, delimiter, text_type):
     if len(splitted_node) % 2 == 0:
         raise Exception(f"Number of delimiters must be an even number/section must be closed for the markdown to be valid.")
 
-    text_node_1 = TextNode(splitted_node[0], TextType.TEXT)
-    text_node_2 = TextNode(splitted_node[1], text_type)
-    text_node_3 = TextNode(splitted_node[2], TextType.TEXT)
-
-    new_nodes = [text_node_1, text_node_2, text_node_3]
-
     result = []
-    result.extend(list(filter(lambda node: node.text != "", new_nodes)))
+    for i in range(len(splitted_node)):
+        if splitted_node[i] == "":
+            continue
+        if i % 2 == 0:
+            result.append(TextNode(splitted_node[i], TextType.TEXT))
+        else:
+            result.append(TextNode(splitted_node[i], text_type))
 
     return result
 
