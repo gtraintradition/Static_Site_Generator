@@ -1,22 +1,5 @@
-from enum import Enum
+from text_enums import *
 
-
-
-class TextType(Enum):
-    TEXT = "text"
-    BOLD = "bold"
-    ITALIC = "italic"
-    CODE = "code"
-    LINK = "link"
-    IMAGE = "image"
-
-class TagType(Enum):
-    TEXT = {"tag": None, "props": None}
-    BOLD = {"tag": "b", "props": None}
-    ITALIC = {"tag": "i", "props": None}
-    CODE = {"tag": "code", "props": None}
-    LINK = {"tag": "a", "props": ["href",]}
-    IMAGE = {"tag": "img", "props": ["src","alt",]}
 
 
 class TextNode():
@@ -51,7 +34,7 @@ class TextNode():
     def __repr__(self):
         # returns a string with class name and variables
         final = list(map(str, vars(self).values()))
-        final[1] = f"{self.text_type.value}"        # might need adjustment if children classes are created
+        #final[1] = f"{self.text_type.value}"        # might need adjustment if children classes are created
         return f"{self.__class__.__name__}({", ".join(final)})"
     
 

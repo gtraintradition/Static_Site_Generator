@@ -2,7 +2,7 @@ from textnode import *
 from htmlnode import *
 
 from textnode_to_htmlnode import *
-
+from split_nodes_delimiter import *
 
 
 
@@ -29,9 +29,9 @@ def main():
         ],
     )
 
-    dummy = TextNode("alt text", "image", "https://url.org")
-    dummy2 = TextNode("dummy text", "bold", "https://url.org")
-    dummy3 = TextNode("anchor text", "link", "https://url.org")
+    text_node_1 = TextNode("alt text", "image", "https://url.org")
+    text_node_2 = TextNode("dummy text", "bold", "https://url.org")
+    text_node_3 = TextNode("anchor text", "link", "https://url.org")
 
 
     dummyHTML1 = HTMLNode("tag name 1", 
@@ -61,27 +61,52 @@ def main():
 
     parent_node3 = ParentNode("nc",[],)
 
+
+    text_node_4 = TextNode("This is text with a `code block` word", TextType.TEXT)
+    text_node_5 = TextNode("This is text with a *code block* word", TextType.TEXT)
+    text_node_6 = TextNode("This is text with a `code block` word", TextType.TEXT)
+    text_node_7 = TextNode("This is text with a **code block** word", TextType.TEXT)
+
+
     #######
 
 
-    print("-----")
-    converted1 = text_node_to_html_node(dummy)
-    print("-----")
-    
+    node_list = [text_node_4, text_node_5, text_node_6, text_node_7]
 
+    new_nodes1 = split_nodes_delimiter(node_list, "`", TextType.CODE)
+
+    new_nodes2 = split_nodes_delimiter(node_list, "*", TextType.ITALIC)
+  
+    new_nodes3 = split_nodes_delimiter(node_list, "**", TextType.BOLD)
+
+
+
+
+    print()
+    print(new_nodes1)
+    print()
+    print(new_nodes2)
+    print()
+    print(new_nodes3)
+    """
+    print()
     print("-----")
-    converted2 = text_node_to_html_node(dummy2)
     print("-----")
-    print("-----")
-    converted3 = text_node_to_html_node(dummy3)
-    print("-----")
-    
-    print("------ converted")
-    print(converted1)
-    print("------ converted")
-    print(converted2)
-    print("------ converted")
-    print(converted3)
+    print()
+    print("Here are nodes1:")
+    for obj in new_nodes1:
+        print(f"    {obj}")
+    print()
+    print("Here are nodes2:")
+    for obj in new_nodes2:
+        print(f"    {obj}")
+    print()
+    print("Here are nodes3:")
+    for obj in new_nodes3:
+        print(f"    {obj}")
+    """
+
+
 
 
 if __name__ == "__main__":
