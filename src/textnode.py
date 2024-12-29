@@ -1,12 +1,6 @@
 from enum import Enum
 
 
-class Bender(Enum):
-    AIR_BENDER = "air"
-    WATER_BENDER = "water"
-    EARTH_BENDER = "earth"
-    FIRE_BENDER = "fire"
-
 
 class TextType(Enum):
     NORMAL = "normal"
@@ -15,6 +9,7 @@ class TextType(Enum):
     CODE = "code"
     LINK = "link"
     IMAGE = "image"
+    TEXT = "text"
 
 
 class TextNode():
@@ -36,6 +31,7 @@ class TextNode():
         return False
         
     def __repr__(self):
-        # returns a string representation of the object
-        return f"TextNode({self.text}, {self.text_type}, {self.url})"
-    
+        # returns a string with class name and variables
+        final = list(map(str, vars(self).values()))
+        final[1] = str(self.text_type.value)
+        return f"{self.__class__.__name__}({", ".join(final)})"
