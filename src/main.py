@@ -1,7 +1,7 @@
 from textnode import *
 from htmlnode import *
 
-
+from textnode_to_htmlnode import *
 
 
 
@@ -29,7 +29,9 @@ def main():
         ],
     )
 
-    dummy = TextNode("dummy text", "italic", "https://url.org")
+    dummy = TextNode("alt text", "image", "https://url.org")
+    dummy2 = TextNode("dummy text", "bold", "https://url.org")
+    dummy3 = TextNode("anchor text", "link", "https://url.org")
 
 
     dummyHTML1 = HTMLNode("tag name 1", 
@@ -59,34 +61,27 @@ def main():
 
     parent_node3 = ParentNode("nc",[],)
 
+    #######
 
-    print(dummyHTML2.props_to_html())
+
     print("-----")
-    print(parent_node2)
+    converted1 = text_node_to_html_node(dummy)
     print("-----")
     
-    print(parent_node3.to_html())
+
     print("-----")
-    print(parent_node2.to_html())
-    print()
-
-
-    """
-    print(dummyLeafNode1)
-    print(dummyLeafNode2)
+    converted2 = text_node_to_html_node(dummy2)
     print("-----")
-    print(dummyLeafNode1.to_html())
-    print()
-    print(dummyLeafNode2.to_html())
-    print()
-    print(dummyLeafNode3.to_html())
-    print()
-    print(dummyLeafNode3)
-    print()
-    """
-
-
-
+    print("-----")
+    converted3 = text_node_to_html_node(dummy3)
+    print("-----")
+    
+    print("------ converted")
+    print(converted1)
+    print("------ converted")
+    print(converted2)
+    print("------ converted")
+    print(converted3)
 
 
 if __name__ == "__main__":
