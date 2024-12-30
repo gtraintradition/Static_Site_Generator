@@ -53,6 +53,7 @@ class Test_text_node_to_html_node(unittest.TestCase):
             text_node_to_html_node(dummyLeafNode1)
         
 
+
 class Test_split_nodes_delimiter(unittest.TestCase):
 
     def test_process_code(self):
@@ -188,6 +189,144 @@ class Test_split_nodes_delimiter(unittest.TestCase):
         )
 
 
+
+class Test_split_nodes_image(unittest.TestCase):
+
+
+    def test_1_image_in_text(self):
+        node1 = TextNode("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_image([node1])), "[TextNode(This is text with a , TextType.TEXT, None), TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif), TextNode( and , TextType.TEXT, None)]")
+
+    def test_2_images_in_text(self):
+        node1 = TextNode("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_image([node1])), "[TextNode(This is text with a , TextType.TEXT, None), TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif), TextNode( and , TextType.TEXT, None), TextNode(obi wan, TextType.IMAGE, https://i.imgur.com/fJRm4Vk.jpeg)]")
+
+    def test_only_image_in_text(self):
+        node1 = TextNode("![rick roll](https://i.imgur.com/aKaOqIh.gif)", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_image([node1])), "[TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif)]")
+
+    def test_4_images_in_1_node(self):
+        node1 = TextNode("![rick roll](https://i.imgur.com/aKaOqIh.gif)![rick roll](https://i.imgur.com/aKaOqIh.gif)![rick roll](https://i.imgur.com/aKaOqIh.gif)![rick roll](https://i.imgur.com/aKaOqIh.gif)", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_image([node1])), "[TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif), TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif), TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif), TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif)]")
+
+    def test_no_images_in_text(self):
+        node1 = TextNode("some test text", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_image([node1])), "[TextNode(some test text, TextType.TEXT, None)]")
+
+    def test_empty_list(self):
+        with self.assertRaises(Exception, msg="Expected Exception"):
+            split_nodes_image([])
+
+    def test_wrong_arg(self):
+        with self.assertRaises(Exception, msg="Expected Exception"):
+            split_nodes_image("test arg")
+
+    def test_3_nodes_list(self):
+        node1 = TextNode("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)", TextType.TEXT,)
+        node2 = TextNode("NODE2TEXT ![IMAGE](https://i.LINK.com/LINK.gif) and ![5555](https://i.55555.com/fSFGk.jpeg) and some other text at the end", TextType.TEXT,)
+        node3 = TextNode("![IMAGE](https://i.LINK.com/LINK.gif) and ![OUI](https://i.IIIIIII.com/fSFGk.jpeg) and some other text at the end", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_image([node1, node2, node3])), "[TextNode(This is text with a , TextType.TEXT, None), TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif), TextNode( and , TextType.TEXT, None), TextNode(obi wan, TextType.IMAGE, https://i.imgur.com/fJRm4Vk.jpeg), TextNode(NODE2TEXT , TextType.TEXT, None), TextNode(IMAGE, TextType.IMAGE, https://i.LINK.com/LINK.gif), TextNode( and , TextType.TEXT, None), TextNode(5555, TextType.IMAGE, https://i.55555.com/fSFGk.jpeg), TextNode( and some other text at the end, TextType.TEXT, None), TextNode(IMAGE, TextType.IMAGE, https://i.LINK.com/LINK.gif), TextNode( and , TextType.TEXT, None), TextNode(OUI, TextType.IMAGE, https://i.IIIIIII.com/fSFGk.jpeg), TextNode( and some other text at the end, TextType.TEXT, None)]")
+
+    #### boot.dev tests below
+    def test_split_image(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+            ],
+            new_nodes,
+        )
+
+    def test_split_image_single(self):
+        node = TextNode(
+            "![image](https://www.example.COM/IMAGE.PNG)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("image", TextType.IMAGE, "https://www.example.COM/IMAGE.PNG"),
+            ],
+            new_nodes,
+        )
+
+    def test_split_images(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", TextType.TEXT),
+                TextNode(
+                    "second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"
+                ),
+            ],
+            new_nodes,
+        )
+
+
+class Test_split_nodes_link(unittest.TestCase):
+
+    def test_1_link_in_text(self):
+        node1 = TextNode("This is text with a link [to boot dev](https://www.boot.dev)", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_link([node1])), "[TextNode(This is text with a link , TextType.TEXT, None), TextNode(to boot dev, TextType.LINK, https://www.boot.dev)]")
+
+    def test_2_link_in_text(self):
+        node1 = TextNode("This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_link([node1])), "[TextNode(This is text with a link , TextType.TEXT, None), TextNode(to boot dev, TextType.LINK, https://www.boot.dev), TextNode( and , TextType.TEXT, None), TextNode(to youtube, TextType.LINK, https://www.youtube.com/@bootdotdev)]")
+
+    def test_only_link_in_text(self):
+        node1 = TextNode("[to boot dev](https://www.boot.dev)", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_link([node1])), "[TextNode(to boot dev, TextType.LINK, https://www.boot.dev)]")
+
+    def test_4_images_in_1_node(self):
+        node1 = TextNode("[to boot dev](https://www.boot.dev)[to boot dev](https://www.boot.dev)[to boot dev](https://www.boot.dev)[to boot dev](https://www.boot.dev)", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_link([node1])), "[TextNode(to boot dev, TextType.LINK, https://www.boot.dev), TextNode(to boot dev, TextType.LINK, https://www.boot.dev), TextNode(to boot dev, TextType.LINK, https://www.boot.dev), TextNode(to boot dev, TextType.LINK, https://www.boot.dev)]")
+
+    def test_no_link_in_text(self):
+        node1 = TextNode("some test text", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_link([node1])), "[TextNode(some test text, TextType.TEXT, None)]")
+
+    def test_empty_list(self):
+        with self.assertRaises(Exception, msg="Expected Exception"):
+            split_nodes_link([])
+
+    def test_wrong_arg(self):
+        with self.assertRaises(Exception, msg="Expected Exception"):
+            split_nodes_link("test arg")
+
+    def test_3_nodes_list(self):
+        node1 = TextNode("This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)", TextType.TEXT,)
+        node2 = TextNode("This 22222nk [to boot dev](https://www.2222222.dev) and [to youtube](https://www.222222e.com/@boot222dev)", TextType.TEXT,)
+        node3 = TextNode("This 33333 with a link [to 33333 dev](https://www.boot.dev) and [to3333be](https://www.yo333ube.com/@boo3333tdev)", TextType.TEXT,)
+        self.assertEqual(str(split_nodes_link([node1, node2, node3])), "[TextNode(This is text with a link , TextType.TEXT, None), TextNode(to boot dev, TextType.LINK, https://www.boot.dev), TextNode( and , TextType.TEXT, None), TextNode(to youtube, TextType.LINK, https://www.youtube.com/@bootdotdev), TextNode(This 22222nk , TextType.TEXT, None), TextNode(to boot dev, TextType.LINK, https://www.2222222.dev), TextNode( and , TextType.TEXT, None), TextNode(to youtube, TextType.LINK, https://www.222222e.com/@boot222dev), TextNode(This 33333 with a link , TextType.TEXT, None), TextNode(to 33333 dev, TextType.LINK, https://www.boot.dev), TextNode( and , TextType.TEXT, None), TextNode(to3333be, TextType.LINK, https://www.yo333ube.com/@boo3333tdev)]")
+
+    #### boot.dev tests below
+    def test_split_links(self):
+        node = TextNode(
+            "This is text with a [link](https://boot.dev) and [another link](https://blog.boot.dev) with text that follows",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+                TextNode(" and ", TextType.TEXT),
+                TextNode("another link", TextType.LINK, "https://blog.boot.dev"),
+                TextNode(" with text that follows", TextType.TEXT),
+            ],
+            new_nodes,
+        )
 
 
 

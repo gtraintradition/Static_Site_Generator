@@ -1,3 +1,5 @@
+import re
+
 from htmlnode import LeafNode
 from textnode import TextNode
 
@@ -105,12 +107,88 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
 
 def split_nodes_image(old_nodes):
-    # takes a list of nodes, returns a list of nodes
-
-    pass
+    # takes a list of TextType.TEXT, returns a list of TextType.TEXT and TextType.IMAGE if there are any
 
 
+    def process_node_image(node):
+    # node is a TextNode object, of TextType.TEXT only
+
+        if type(node) != TextNode:
+            raise Exception(f"Can only process TextNode objects, make sure all the objects in the list you passed are TextNodes")
+
+        if node.text_type != TextType.TEXT:
+            return [node]
+        
+
+        delimiter = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
+        splitted_node = re.split(delimiter, node.text)
+
+        if len(splitted_node) <= 1:
+            return [node]
+
+        result = []
+        for i in range(0, len(splitted_node), 3):
+            if splitted_node[i] != "":
+                result.append(TextNode(splitted_node[i], TextType.TEXT))
+            if i != (len(splitted_node) - 1):
+                result.append(TextNode(splitted_node[i + 1], TextType.IMAGE, splitted_node[i + 2]))
+
+        return result
+    
+
+    if type(old_nodes) != list:
+        raise Exception("\"old_nodes\" (arg 1) needs to be a list of TextNodes.")
+    if old_nodes == []:
+        raise Exception("\"old_nodes\" (arg 1) can't be empty.")
+
+    splitted_nodes = map(lambda node: (process_node_image(node)) , old_nodes)
+
+    final = []
+    for node in splitted_nodes:
+        final.extend(node)
+
+    return final
 
 
 def split_nodes_link(old_nodes):
-    pass
+    # takes a list of TextType.TEXT, returns a list of TextType.TEXT and TextType.LINK if there are any
+
+
+    def process_node_image(node):
+    # node is a TextNode object, of TextType.TEXT only
+
+        if type(node) != TextNode:
+            raise Exception(f"Can only process TextNode objects, make sure all the objects in the list you passed are TextNodes")
+
+        if node.text_type != TextType.TEXT:
+            return [node]
+        
+
+        delimiter = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
+        splitted_node = re.split(delimiter, node.text)
+
+        if len(splitted_node) <= 1:
+            return [node]
+
+        result = []
+        for i in range(0, len(splitted_node), 3):
+            if splitted_node[i] != "":
+                result.append(TextNode(splitted_node[i], TextType.TEXT))
+            if i != (len(splitted_node) - 1):
+                result.append(TextNode(splitted_node[i + 1], TextType.LINK, splitted_node[i + 2]))
+
+        return result
+    
+
+    if type(old_nodes) != list:
+        raise Exception("\"old_nodes\" (arg 1) needs to be a list of TextNodes.")
+    if old_nodes == []:
+        raise Exception("\"old_nodes\" (arg 1) can't be empty.")
+
+    splitted_nodes = map(lambda node: (process_node_image(node)) , old_nodes)
+
+    final = []
+    for node in splitted_nodes:
+        final.extend(node)
+
+    return final
