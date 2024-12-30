@@ -7,17 +7,17 @@ class TextNode():
     def __init__(self, text, text_type, url=None):
         self.text = text
 
-        if text_type not in TextType:
-            raise Exception(f"text_type: \"{text_type}\" not recognized")
-        
         # if a value of TextType is passed, converts it to TextType
         if isinstance(text_type, str):
             for type in TextType:
-                if type.value == text_type:
+                if type.value == text_type.lower():
                     self.text_type = type
-
         else:
             self.text_type = text_type
+
+        if self.text_type not in TextType:
+            raise Exception(f"text_type: \"{text_type.lower()}\" not recognized")
+        
 
         self.url = url
 

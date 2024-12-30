@@ -86,5 +86,38 @@ class Test_extract_markdown_links(unittest.TestCase):
         )
 
 
+
+class Test_text_to_textnodes(unittest.TestCase):
+
+    # the following one is from boot.dev solution and asignment
+    def test_1_of_each_texttype(self):
+        text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        self.assertEqual(str(text_to_textnodes(text)), "[TextNode(This is , TextType.TEXT, None), TextNode(text, TextType.BOLD, None), TextNode( with an , TextType.TEXT, None), TextNode(italic, TextType.ITALIC, None), TextNode( word and a , TextType.TEXT, None), TextNode(code block, TextType.CODE, None), TextNode( and an , TextType.TEXT, None), TextNode(obi wan image, TextType.IMAGE, https://i.imgur.com/fJRm4Vk.jpeg), TextNode( and a , TextType.TEXT, None), TextNode(link, TextType.LINK, https://boot.dev)]")
+
+    def test_only_text(self):
+        text = "This is only text"
+        self.assertEqual(str(text_to_textnodes(text)), "[TextNode(This is only text, TextType.TEXT, None)]")
+
+    def test_only_1_italic(self):
+        text = "*This is only text*"
+        self.assertEqual(str(text_to_textnodes(text)), "[TextNode(This is only text, TextType.ITALIC, None)]")
+
+    def test_only_1_image(self):
+        text = "![rick roll](https://i.imgur.com/aKaOqIh.gif)"
+        self.assertEqual(str(text_to_textnodes(text)), "[TextNode(rick roll, TextType.IMAGE, https://i.imgur.com/aKaOqIh.gif)]")
+
+    def test_wrong_arg(self):
+        with self.assertRaises(ValueError, msg="Expected ValueError"):
+            text_to_textnodes(456)
+
+    # not sure about the following one
+    def test_empty_string(self):
+        text = ""
+        self.assertEqual(str(text_to_textnodes(text)), "[TextNode(, TextType.TEXT, None)]")
+
+
+
+
+
 if __name__ == "__main__":
     unittest.main()

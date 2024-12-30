@@ -104,8 +104,6 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     return final
 
 
-
-
 def split_nodes_image(old_nodes):
     # takes a list of TextType.TEXT, returns a list of TextType.TEXT and TextType.IMAGE if there are any
 
