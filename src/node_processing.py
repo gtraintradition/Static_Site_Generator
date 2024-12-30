@@ -3,7 +3,7 @@ import re
 from htmlnode import LeafNode
 from textnode import TextNode
 
-from text_enums import *
+from generator_enums import TextType, DelimiterType, TagType
 
 
 

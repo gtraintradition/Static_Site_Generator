@@ -1,4 +1,4 @@
-from text_enums import TextType, DelimiterType
+from generator_enums import TextType, DelimiterType
 
 from textnode import TextNode
 

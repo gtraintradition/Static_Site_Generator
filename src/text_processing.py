@@ -3,7 +3,7 @@ import re
 from textnode import TextNode
 from node_processing import split_nodes_delimiter, split_nodes_image, split_nodes_link
 
-from text_enums import TextType, DelimiterType
+from generator_enums import TextType
 
 
 

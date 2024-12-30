@@ -1,8 +1,5 @@
 import unittest
 
-from textnode import TextNode
-from text_enums import TextType
-
 from text_processing import *
 
 

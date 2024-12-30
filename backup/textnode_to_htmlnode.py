@@ -1,7 +1,7 @@
 from htmlnode import LeafNode
 from textnode import TextType, TagType, TextNode
 
-from text_enums import *
+from generator_enums import *
 
 
 def text_node_to_html_node(text_node):

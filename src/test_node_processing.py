@@ -4,6 +4,8 @@ from textnode import TextNode
 from htmlnode import LeafNode
 from node_processing import *
 
+from generator_enums import TextType
+
 
 class Test_text_node_to_html_node(unittest.TestCase):
 

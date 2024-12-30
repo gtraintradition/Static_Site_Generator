@@ -24,3 +24,12 @@ class DelimiterType(Enum):
     BOLD = "**"
     ITALIC = "*"
     CODE = "`"
+
+
+class BlockTypes(Enum):
+    HEADING = r"\#{1,6} " # checked
+    CODE = r"\`\`\`" # (.*?)\`\`\`
+    QUOTE = r"\>"
+    UNORDERED_LIST = r"[\*\-]" 
+    ORDERED_LIST = r"\d\."
+    PARAGRAPH = ""

@@ -68,6 +68,78 @@ This is the same paragraph on a new line
         )
 
 
+class Test_block_to_block_type(unittest.TestCase):
+
+    # Heading tests
+    def test_1_hashtag_1_space(self):
+        self.assertEqual(block_to_block_type("# this is a test"), BlockTypes.HEADING)
+    def test_2_hashtag_1_space(self):
+        self.assertEqual(block_to_block_type("## this is a test"), BlockTypes.HEADING)
+    def test_3_hashtag_1_space(self):
+        self.assertEqual(block_to_block_type("### this is a test"), BlockTypes.HEADING)
+    def test_4_hashtag_1_space(self):
+        self.assertEqual(block_to_block_type("#### this is a test"), BlockTypes.HEADING)
+    def test_5_hashtag_1_space(self):
+        self.assertEqual(block_to_block_type("##### this is a test"), BlockTypes.HEADING)
+    def test_6_hashtag_1_space(self):
+        self.assertEqual(block_to_block_type("###### this is a test"), BlockTypes.HEADING)
+    def test_2_hashtag_no_space(self):
+        self.assertEqual(block_to_block_type("##this is a test"), BlockTypes.PARAGRAPH)
+    def test_6_hashtag_no_space(self):
+        self.assertEqual(block_to_block_type("######this is a test"), BlockTypes.PARAGRAPH)
+    def test_7_hashtag_1_space(self):
+        self.assertEqual(block_to_block_type("####### this is a test"), BlockTypes.PARAGRAPH)
+
+    # Code tests
+    def test_3_backtick_start_3_end(self):
+        self.assertEqual(block_to_block_type("```this is a test```"), BlockTypes.CODE)
+    def test_3_backtick_start_0_end(self):
+        self.assertEqual(block_to_block_type("```this is a test"), BlockTypes.PARAGRAPH)
+
+    # Quote test
+    def test_1_greater_than(self):
+        self.assertEqual(block_to_block_type(">this is a test"), BlockTypes.QUOTE)
+
+    # Unordered list test
+    def test_1_asterisk(self):
+        self.assertEqual(block_to_block_type("* this is a test"), BlockTypes.UNORDERED_LIST)
+    def test_1_asterisk(self):
+        self.assertEqual(block_to_block_type("-> this is a test"), BlockTypes.UNORDERED_LIST)
+    
+    # Ordered list tests
+    def test_1_asterisk(self):
+        self.assertEqual(block_to_block_type("4. this is a test"), BlockTypes.ORDERED_LIST)
+    def test_1_asterisk(self):
+        self.assertEqual(block_to_block_type("44. this is a test"), BlockTypes.PARAGRAPH)
+    def test_1_asterisk(self):
+        self.assertEqual(block_to_block_type(". this is a test"), BlockTypes.PARAGRAPH)
+    def test_1_asterisk(self):
+        self.assertEqual(block_to_block_type("4 this is a test"), BlockTypes.PARAGRAPH)
+    
+    # Paragraph Test
+    def test_1_asterisk(self):
+        self.assertEqual(block_to_block_type("this is a test"), BlockTypes.PARAGRAPH)
+    def test_empty_string(self):
+        self.assertEqual(block_to_block_type(""), BlockTypes.PARAGRAPH)
+
+    def test_wrong_arg(self):
+        with self.assertRaises(ValueError, msg="Exêcted ValueError"):
+            block_to_block_type(456)
+
+    # Boot.dev tests, adjusted for my enum outputs
+    def test_block_to_block_types(self):
+        block = "# heading"
+        self.assertEqual(block_to_block_type(block), BlockTypes.HEADING)
+        block = "```\ncode\n```"
+        self.assertEqual(block_to_block_type(block), BlockTypes.CODE)
+        block = "> quote\n> more quote"
+        self.assertEqual(block_to_block_type(block), BlockTypes.QUOTE)
+        block = "* list\n* items"
+        self.assertEqual(block_to_block_type(block), BlockTypes.UNORDERED_LIST)
+        block = "1. list\n2. items"
+        self.assertEqual(block_to_block_type(block), BlockTypes.ORDERED_LIST)
+        block = "paragraph"
+        self.assertEqual(block_to_block_type(block), BlockTypes.PARAGRAPH)
 
 
 
