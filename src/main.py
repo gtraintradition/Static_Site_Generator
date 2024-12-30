@@ -1,8 +1,8 @@
 from textnode import *
 from htmlnode import *
 
-from textnode_to_htmlnode import *
-from inline_markdown import *
+from node_processing import *
+from text_processing import *
 
 
 
