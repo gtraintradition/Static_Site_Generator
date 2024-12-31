@@ -22,17 +22,23 @@ class TextType(Enum):
 
 
 class TagType(Enum):
-    TEXT = {"tag": None, "props": None}
+    TEXT = {"tag": "p", "props": None}
     BOLD = {"tag": "b", "props": None}
     ITALIC = {"tag": "i", "props": None}
     CODE = {"tag": "code", "props": None}
     LINK = {"tag": "a", "props": ["href",]}
     IMAGE = {"tag": "img", "props": ["src","alt",]}
 
-    HEADING = {"tag": ["h1", "h2", "h3", "h4", "h5", "h6"], "props": None}
     QUOTE = {"tag": "blockquote", "props": None} # will need further processing 
     UNORDERED_LIST = {"tag": "ul", "props": None} # will need further processing for "li" tag
     ORDERED_LIST = {"tag": "ol", "props": None} # will need further processing for "li" tag
+
+    HEADING1 = {"tag": "h1", "props": None}
+    HEADING2 = {"tag": "h2", "props": None}
+    HEADING3 = {"tag": "h3", "props": None}
+    HEADING4 = {"tag": "h4", "props": None}
+    HEADING5 = {"tag": "h5", "props": None}
+    HEADING6 = {"tag": "h6", "props": None}
 
 
 class DelimiterType(Enum):
