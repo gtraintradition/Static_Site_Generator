@@ -19,7 +19,7 @@ class TagType(Enum):
     LINK = {"tag": "a", "props": ["href",]}
     IMAGE = {"tag": "img", "props": ["src","alt",]}
 
-    HEADING = {"tag": "h1", "props": None}
+    HEADING = {"tag": ["h1", "h2", "h3", "h4", "h5", "h6"], "props": None}
     QUOTE = {"tag": "blockquote", "props": None}
     UNORDERED_LIST = {"tag": "ul", "props": None}
     ORDERED_LIST = {"tag": "ol", "props": None} # will need further processing for "li" tag
