@@ -19,6 +19,11 @@ class TagType(Enum):
     LINK = {"tag": "a", "props": ["href",]}
     IMAGE = {"tag": "img", "props": ["src","alt",]}
 
+    HEADING = {"tag": "h1", "props": None}
+    QUOTE = {"tag": "blockquote", "props": None}
+    UNORDERED_LIST = {"tag": "ul", "props": None}
+    ORDERED_LIST = {"tag": "ol", "props": None} # will need further processing for "li" tag
+
 
 class DelimiterType(Enum):
     BOLD = "**"
@@ -27,9 +32,10 @@ class DelimiterType(Enum):
 
 
 class BlockTypes(Enum):
-    HEADING = r"\#{1,6} " # checked
+    HEADING = r"#{1,6} " # checked
     CODE = r"\`\`\`" # (.*?)\`\`\`
     QUOTE = r"\>"
-    UNORDERED_LIST = r"[\*\-]" 
-    ORDERED_LIST = r"\d\."
+    UNORDERED_LIST = r"[\*\-] " 
+    ORDERED_LIST = r"\d\. "
     PARAGRAPH = ""
+
