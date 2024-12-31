@@ -4,7 +4,6 @@ from generator_enums import BlockTypes
 
 
 
-
 def block_to_block_type(block):
     # Takes a single block of markdown text as input and returns a string representing the type of block it is
 
@@ -45,6 +44,22 @@ def block_to_block_type(block):
             for line in lines:
                 if not re.match(block_type.value, line[0]):
                     return BlockTypes.PARAGRAPH
+            return block_type
+
+        if block_type.name == "BOLD" and re.match(block_type.value, block):
+            print("found match for bold")
+            return block_type
+
+        if block_type.name == "ITALIC" and re.match(block_type.value, block):
+            print("found match for italic")
+            return block_type
+
+        if block_type.name == "LINK" and re.match(block_type.value, block):
+            print("found match for link")
+            return block_type
+
+        if block_type.name == "IMAGE" and re.match(block_type.value, block):
+            print("found match for image")
             return block_type
 
     return BlockTypes.PARAGRAPH

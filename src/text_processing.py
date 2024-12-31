@@ -42,17 +42,14 @@ def text_to_textnodes(text):
 
     text_node = TextNode(text, TextType.TEXT)
 
-    ######## start
-
-
-
-
-
-    ######## end
     processed_list_bold = split_nodes_delimiter([text_node], "**", TextType.BOLD)
     processed_list_italic = split_nodes_delimiter(processed_list_bold, "*", TextType.ITALIC)
     processed_list_code = split_nodes_delimiter(processed_list_italic, "`", TextType.CODE)
     processed_list_image = split_nodes_image(processed_list_code)
     processed_list_link = split_nodes_link(processed_list_image)
+    #######
+
 
     return processed_list_link
+
+

@@ -10,6 +10,16 @@ class TextType(Enum):
     LINK = "link"
     IMAGE = "image"
 
+    HEADING1 = "heading 1"
+    HEADING2 = "heading 2"
+    HEADING3 = "heading 3"
+    HEADING4 = "heading 4"
+    HEADING5 = "heading 5"
+    HEADING6 = "heading 6"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
+
 
 class TagType(Enum):
     TEXT = {"tag": None, "props": None}
@@ -20,8 +30,8 @@ class TagType(Enum):
     IMAGE = {"tag": "img", "props": ["src","alt",]}
 
     HEADING = {"tag": ["h1", "h2", "h3", "h4", "h5", "h6"], "props": None}
-    QUOTE = {"tag": "blockquote", "props": None}
-    UNORDERED_LIST = {"tag": "ul", "props": None}
+    QUOTE = {"tag": "blockquote", "props": None} # will need further processing 
+    UNORDERED_LIST = {"tag": "ul", "props": None} # will need further processing for "li" tag
     ORDERED_LIST = {"tag": "ol", "props": None} # will need further processing for "li" tag
 
 
@@ -29,6 +39,7 @@ class DelimiterType(Enum):
     BOLD = "**"
     ITALIC = "*"
     CODE = "`"
+    CODE2 = "```"
 
 
 class BlockTypes(Enum):
@@ -39,3 +50,7 @@ class BlockTypes(Enum):
     ORDERED_LIST = r"\d\. "
     PARAGRAPH = ""
 
+    BOLD = r"\*\*.*?\*\*"
+    ITALIC = r"\*.*?\*"
+    LINK = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
+    IMAGE = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
