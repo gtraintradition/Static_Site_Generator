@@ -1,5 +1,4 @@
-import re
-import os
+import os, re
 
 from htmlnode import ParentNode, LeafNode
 from text_processing import text_to_textnodes, text_to_html
@@ -9,6 +8,25 @@ from generator_enums import BlockTypes
 
 
 
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    
+    # Check if source directory exist 
+    if not os.path.exists(dir_path_content):
+        raise Exception(f"Source directory: \"{dir_path_content}\" does not exist.")   
+
+    for file in sorted(os.listdir(dir_path_content)):
+        src_file_path = dir_path_content + "/" + file
+        dest_file_path = dest_dir_path + "/" + file
+
+        if os.path.isfile(src_file_path) and file[-3:] == ".md":
+            dest_file_path = dest_file_path[:-2] + "html"
+            generate_page(src_file_path, template_path, dest_file_path)
+        else:
+            os.mkdir(dest_file_path)
+            # recursion
+            generate_pages_recursive(src_file_path, template_path, dest_file_path)
 
 
 def generate_page(from_path, template_path, dest_path):
