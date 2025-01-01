@@ -1,11 +1,10 @@
 import re
 
-from textnode import TextNode
-from htmlnode import LeafNode, ParentNode
-from block_processing import block_to_block_type
-from node_processing import *
+from htmlnode import ParentNode, LeafNode
+from text_processing import text_to_textnodes, text_to_html
+from node_processing import text_node_to_html_node
 
-from generator_enums import TextType, TagType, BlockTypes
+from generator_enums import BlockTypes
 
 
 
@@ -33,33 +32,158 @@ def markdown_to_html_node(markdown):
         raise ValueError("Only a string is accepted")
     
     blocks = markdown_to_blocks(markdown)
-    text_nodes = blocks_to_text_nodes(blocks)
 
-    html_nodes = list(map(text_node_to_html_node, text_nodes))
+    html_nodes = list(map(block_to_html_node, blocks))
 
     parent_node = ParentNode("div", html_nodes)
 
     return parent_node
 
 
-def blocks_to_text_nodes(block_list):
-    # takes a list of blocks, returns a list of text nodes
+def block_to_html_node(block):
 
-    if type(block_list) != list:
-        raise ValueError("Only a list (of TextNodes) is accepted")
+    #print("-------working on block")
+    #print(block)
+    #print()
 
-    node_list = list(map(lambda node: TextNode(node, TextType.TEXT), block_list))
 
-    processed_list_bold = split_nodes_delimiter(node_list, "**", TextType.BOLD)
-    processed_list_italic = split_nodes_delimiter(processed_list_bold, "*", TextType.ITALIC)
-    processed_list_code = split_nodes_delimiter(processed_list_italic, "```", TextType.CODE)
-    processed_list_code2 = split_nodes_delimiter(processed_list_code, "`", TextType.CODE)
-    processed_list_image = split_nodes_image(processed_list_code2)
-    processed_list_link = split_nodes_link(processed_list_image)
-    #######
-    processed_list_heading = split_nodes_heading(processed_list_link)
-    processed_list_quote = split_nodes_quote(processed_list_heading)
-    processed_list_unordered = split_nodes_unordered_list(processed_list_quote)
-    processed_list_ordered = split_nodes_ordered_list(processed_list_unordered)
+    # Handling Heading
+    match = re.match(BlockTypes.HEADING.value, block[0:8])
+    if match != None:
+        text = re.sub(match[0], "", block)
+        text = text_to_html(text)
+        return LeafNode(f"h{len(match[0]) - 1}", text)
+        
 
-    return processed_list_ordered
+    # Handling Ordered List
+    if block[0:3] == "1. ":
+        result = handle_ol(block)
+        if result != None:
+            return result
+        
+
+    # Handling Unordered List
+    match = re.match(BlockTypes.UNORDERED_LIST.value, block[0:3])
+    if match != None:
+        result = handle_ul(block)
+        if result != None:
+            return result
+        
+
+    # Handling Quote
+    if block[0] == ">":
+        result = handle_quote(block)
+        if result != None:
+            return result
+        
+
+    # Handling Code
+    if block[0:4] == block[-3:] == "```" or block[0] == block[-1] == "`":
+        result = handle_code(block)
+        if result != None:
+            return result
+
+    # If every check before fail block is considered s paragraph
+    # Handling Paragraph
+    result = handle_paragraph(block)
+    return result
+
+
+def handle_ol(block):
+
+    lines = block.split("\n")
+    children_nodes_list = []
+    for i in range(len(lines)):
+        if lines[i][0:3] != f"{i + 1}. ":
+            return
+        line = lines[i][3:]
+        line = text_to_html(line)
+        textnodes_list = text_to_textnodes(line)
+
+        if len(textnodes_list) == 1:
+            children_nodes_list.append(LeafNode("li", line))
+        
+        else:
+            html_node_list = []
+            for text_node in textnodes_list:
+                htmlnode = text_node_to_html_node(text_node)
+                html_node_list.append(htmlnode)
+            children_nodes_list.append(ParentNode("li", html_node_list))
+
+    return ParentNode("ol", children_nodes_list)    
+
+
+def handle_ul(block):
+
+    lines = block.split("\n")
+    children_nodes_list = []
+    for line in lines:
+        if re.match(BlockTypes.UNORDERED_LIST.value, line[0:3]) == None:
+            return
+        line = line[2:]
+        line = text_to_html(line)
+        textnodes_list = text_to_textnodes(line)
+
+        if len(textnodes_list) == 1:
+            children_nodes_list.append(LeafNode("li", line))
+        
+        else:
+            html_node_list = []
+            for text_node in textnodes_list:
+                htmlnode = text_node_to_html_node(text_node)
+                html_node_list.append(htmlnode)
+            children_nodes_list.append(ParentNode("li", html_node_list))
+
+    return ParentNode("ul", children_nodes_list)     
+
+
+def handle_quote(block):
+
+    lines = block.split("\n")
+    new_lines = [] 
+
+    for i in range(len(lines)):
+        line = lines[i]
+        if line[0] != ">":
+            print("breaking")
+            return
+        line = line[1:]
+        line = text_to_html(line)
+        #if i != (len(lines) - 1):
+            #line += "<br>"
+        new_lines.append(line)
+        
+    return LeafNode("blockquote", "".join(new_lines).strip())     
+
+
+def handle_code(block):
+
+    block = block.strip("```")
+    lines = block.split("\n")
+    new_lines = [] 
+
+    for i in range(len(lines)):
+        line = lines[i]
+        line = text_to_html(line)
+        if i != (len(lines) - 1):
+            #line += "<br>"
+            line += " "
+        new_lines.append(line)
+        
+    return LeafNode("code", "".join(new_lines))     
+
+
+def handle_paragraph(block):
+
+    lines = block.split("\n")
+    new_lines = [] 
+
+    for i in range(len(lines)):
+        line = lines[i]
+        line = text_to_html(line)
+        if i != (len(lines) - 1):
+            #line += "<br>"
+            line += " "
+        new_lines.append(line)
+        
+    return LeafNode("p", "".join(new_lines))     

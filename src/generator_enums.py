@@ -22,7 +22,7 @@ class TextType(Enum):
 
 
 class TagType(Enum):
-    TEXT = {"tag": "p", "props": None}
+    TEXT = {"tag": None, "props": None}
     BOLD = {"tag": "b", "props": None}
     ITALIC = {"tag": "i", "props": None}
     CODE = {"tag": "code", "props": None}
@@ -33,6 +33,7 @@ class TagType(Enum):
     UNORDERED_LIST = {"tag": "ul", "props": None} # will need further processing for "li" tag
     ORDERED_LIST = {"tag": "ol", "props": None} # will need further processing for "li" tag
 
+    PARAGRAPH = {"tag": None, "props": None}
     HEADING1 = {"tag": "h1", "props": None}
     HEADING2 = {"tag": "h2", "props": None}
     HEADING3 = {"tag": "h3", "props": None}

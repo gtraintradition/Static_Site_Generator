@@ -106,33 +106,98 @@ one last code with only one backtick
 
 *Some italic text. Some italic text. Some italic text. Some italic text. Some italic text. Some italic text. *
 
->This is a quote.
+> This is a quote.
 >And an other one.
->And an other.
+> And an other.
 >This is the final quote.
 
 **Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text.**"""
 
-        self.assertEqual(str(markdown_to_html_node(markdown)), """ParentNode(div, [LeafNode(h4, Header 4, None), LeafNode(p, This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph., None), LeafNode(ul, <li>Listing an item</li>
-<li>Listing an other item</li>
-<li>Listing one more item</li>
-<li>Listing a final item</li>, None), LeafNode(a, NASA, {'href': 'https://www.nasa.gov/'}), LeafNode(code, 
-some code
-here again code
-one last code
-, None), LeafNode(img, , {'src': 'https://apod.nasa.gov/apod/image/2412/NGC4753_HubbleReinartz_3900.jpg', 'alt': 'Hubble Reinartz'}), LeafNode(ol, <li>Listing a 1st item</li>
-<li>Listing a 2nd item</li>
-<li>Listing a 3rd item</li>
-<li>Listing a 4th item</li>
-<li>Listing a 5th item</li>, None), LeafNode(code, 
-some code with only one backtick
-here again code with only one backtick
-one last code with only one backtick
-, None), LeafNode(i, Some italic text. Some italic text. Some italic text. Some italic text. Some italic text. Some italic text. , None), LeafNode(blockquote, This is a quote.
-And an other one.
-And an other.
-This is the final quote., None), LeafNode(b, Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text., None)], None)""")
+        self.assertEqual(markdown_to_html_node(markdown).to_html(), """<div><h4>Header 4</h4><p>This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph. This is a test paragraph.</p><ul><li>Listing an item</li><li>Listing an other item</li><li>Listing one more item</li><li>Listing a final item</li></ul><p><a href="https://www.nasa.gov/">NASA</a></p><code> some code here again code one last code </code><p><img src="https://apod.nasa.gov/apod/image/2412/NGC4753_HubbleReinartz_3900.jpg" alt="Hubble Reinartz"></p><ol><li>Listing a 1st item</li><li>Listing a 2nd item</li><li>Listing a 3rd item</li><li>Listing a 4th item</li><li>Listing a 5th item</li></ol><code> some code with only one backtick here again code with only one backtick one last code with only one backtick </code><p><i>Some italic text. Some italic text. Some italic text. Some italic text. Some italic text. Some italic text. </i></p><blockquote>This is a quote.And an other one. And an other.This is the final quote.</blockquote><p><b>Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text. Some bold text.</b></p></div>""")
 
+
+    def test_paragraph(self):
+        md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p></div>",
+        )
+
+    def test_paragraphs(self):
+        md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+This is another paragraph with *italic* text and `code` here
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
+        )
+
+    def test_lists(self):
+        md = """
+- This is a list
+- with items
+- and *more* items
+
+1. This is an `ordered` list
+2. with items
+3. and more items
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>This is a list</li><li>with items</li><li>and <i>more</i> items</li></ul><ol><li>This is an <code>ordered</code> list</li><li>with items</li><li>and more items</li></ol></div>",
+        )
+
+    def test_headings(self):
+        md = """
+# this is an h1
+
+this is paragraph text
+
+## this is an h2
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>this is an h1</h1><p>this is paragraph text</p><h2>this is an h2</h2></div>",
+        )
+
+    def test_blockquote(self):
+        md = """
+> This is a
+> blockquote block
+
+this is paragraph text
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
+        )
 
 
 
