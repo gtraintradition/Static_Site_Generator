@@ -1,4 +1,5 @@
 import re
+import os
 
 from htmlnode import ParentNode, LeafNode
 from text_processing import text_to_textnodes, text_to_html
@@ -7,6 +8,46 @@ from node_processing import text_node_to_html_node
 from generator_enums import BlockTypes
 
 
+
+
+
+def generate_page(from_path, template_path, dest_path):
+
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+
+    with open(from_path) as file:
+        markdown = file.read()
+
+    with open(template_path) as file:
+        template = file.read()
+
+    title = extract_title(markdown)
+    markdown = markdown_to_html_node(markdown).to_html()
+
+    template = re.sub("{{ Title }}", title, template)
+    template = re.sub("{{ Content }}", markdown, template)
+
+    dest_minus_file_name = os.path.dirname(dest_path)
+
+    # if parent folder does not exist create it 
+    if dest_minus_file_name != "":
+        os.makedirs(dest_minus_file_name, exist_ok=True)
+
+    # if file exist, remove file
+    if os.path.exists(dest_path):
+        os.remove(dest_path)
+
+    with open(dest_path, "w") as file:
+        file.write(template)
+        
+
+def extract_title(Markdown):
+    blocks = markdown_to_blocks(Markdown)
+    for block in blocks:
+        if block[0:2] == "# ":
+            return block[2:]
+    
+    raise Exception("h1 header not found")
 
 
 def markdown_to_blocks(markdown):
